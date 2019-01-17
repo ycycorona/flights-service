@@ -1,0 +1,60 @@
+{
+  "name": "media-admin",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.18.0",
+    "dayjs": "^1.7.8",
+    "egg": "^2.2.1",
+    "egg-logview": "^2.0.0",
+    "egg-mongoose": "^3.1.1",
+    "egg-mysql": "^3.0.0",
+    "egg-passport": "^2.0.1",
+    "egg-passport-local": "^1.2.1",
+    "egg-scripts": "^2.5.0",
+    "egg-validate": "^2.0.2",
+    "i18n-iso-countries": "^3.7.8",
+    "lodash": "^4.17.11",
+    "nanoid": "^2.0.0",
+    "squel": "^5.12.2",
+    "think-helper": "^1.1.2"
+  },
+  "devDependencies": {
+    "autod": "^3.0.1",
+    "autod-egg": "^1.0.0",
+    "egg-bin": "^4.3.5",
+    "egg-ci": "^1.8.0",
+    "egg-mock": "^3.14.0",
+    "eslint": "^4.11.0",
+    "eslint-config-egg": "^6.0.0"
+  },
+  "engines": {
+    "node": ">=8.9.0"
+  },
+  "scripts": {
+    "start": "egg-scripts start --daemon --title=egg-server-media-admin",
+    "stop": "egg-scripts stop --title=egg-server-media-admin",
+    "dev-DEBUG=ali-rds": "set DEBUG=ali-rds* && egg-bin dev",
+    "dev-DEBUG=all": "set DEBUG=* && egg-bin dev",
+    "dev": "egg-bin dev",
+    "debug": "egg-bin debug",
+    "test": "npm run lint -- --fix && npm run test-local",
+    "test-local": "set DEBUG=ali-rds* && egg-bin test --full-trace",
+    "cov": "egg-bin cov",
+    "lint": "eslint .",
+    "ci": "npm run lint && npm run cov",
+    "autod": "autod",
+    "test-insert": "set DEBUG=ali-rds* && egg-bin test test/app/model/person_insert.test.js --full-trace",
+    "test-delete": "set DEBUG=ali-rds* && egg-bin test test/app/model/person_delete.test.js --full-trace"
+  },
+  "ci": {
+    "version": "8"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "ysunrise",
+  "license": "MIT"
+}
