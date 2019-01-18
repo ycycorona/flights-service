@@ -40,6 +40,48 @@ class FlightsInfoController extends Base {
     ctx.body = res_arranged
   }
 
+  async findByQuery() {
+    const { ctx } = this
+    const dTimeStart = dayjs('2019-01-20').startOf('day').toDate()
+    const dTimeEnd = dayjs('2019-01-20').endOf('day').toDate()
+    const getTimeStart = dayjs('2019-01-18').startOf('day').toDate()
+    const getTimeEnd = dayjs('2019-01-18').endOf('day').toDate()
+
+    const res = await this.ctx.model.Mongo.FlightInfo.find(
+      {
+        'departureDate': {'$gte': dTimeStart, '$lte': dTimeEnd},
+        'airlineCode': {'$in': ['QW']},
+        'departureAirportInfo.airportTlc': 'TAO',
+        'arrivalAirportInfo.airportTlc': 'CTU',
+        'getTime': {'$gte': getTimeStart, '$lte': getTimeEnd},
+        'sharedFlightNumber': {'$not': {'$in': ['']}}
+      },
+      {
+        'airlineName': 1,
+        'airlineCode': 1,
+        'craftTypeName': 1,
+        'flightNumber': 1,
+        'sharedFlightNumber': 1,
+        'departureAirportInfo.airportTlc': 1,
+        'departureAirportInfo.airportName': 1,
+        'arrivalAirportInfo.airportTlc': 1,
+        'arrivalAirportInfo.airportName': 1,
+        'departureDate': 1,
+        'arrivalDate': 1,
+        'cabins.salePrice': 1,
+        'cabins.price': 1,
+        'cabins.cabinClass': 1,
+        'cabins.priceClass': 1,
+        'cabins.rate': 1,
+        'cabins.seatCount': 1,
+        'getTime': 1,
+        //'cabins.refundEndorse': 0
+      }
+    )
+
+    ctx.body = res
+  }
+
   // 根据用户名获取用户信息
   async getUserInfoByUserName() {
 /*    const { ctx } = this;

@@ -69,6 +69,7 @@ module.exports = app => {
     priceClass: String,
     rate: Number,
     seatCount: Number,
+    specialClassName: String,
     refundEndorse: refundEndorseSchema
   })
 

@@ -20,6 +20,7 @@ class flightsInfoService extends Service {
         'airlineCode': 1,
         'craftTypeName': 1,
         'flightNumber': 1,
+        'sharedFlightNumber': 1,
         'departureAirportInfo.airportTlc': 1,
         'departureAirportInfo.airportName': 1,
         'arrivalAirportInfo.airportTlc': 1,
@@ -45,6 +46,11 @@ class flightsInfoService extends Service {
     let currentAirlineCode = ''
     let currentCabinClass = ''
     list.forEach((item) => {
+      // 不处理共享航空
+      if (item.sharedFlightNumber) {
+        return
+      }
+
       currentAirlineCode = item.airlineCode
 
       if (!arranged[currentAirlineCode]) {
@@ -61,8 +67,16 @@ class flightsInfoService extends Service {
         if (!arranged[currentAirlineCode]['cabins'][currentCabinClass]) {
           arranged[currentAirlineCode]['cabins'][currentCabinClass] = []
         }
-
-        if (!pushMark[currentCabinClass]) {
+        //todo 判断是否是共享航班
+        let isShare = false
+        const itemGetTimeFormat = dayjs(item.getTime).format('YYYY-MM-DD HH:mm:ss')
+        if (arranged[currentAirlineCode]['cabins'][currentCabinClass].length !== 0) {
+          if (arranged[currentAirlineCode]['cabins'][currentCabinClass].slice(-1)[0].getTime === itemGetTimeFormat) {
+            isShare = true
+          }
+        }
+        //  同一时间 同一等级仓位只保留一个最低价格（合并渠道仓位价格）
+        if (!pushMark[currentCabinClass] && !isShare) {
           arranged[currentAirlineCode]['cabins'][currentCabinClass].push({
             getTime: dayjs(item.getTime).format('YYYY-MM-DD HH:mm:ss'),
             salePrice: cabin.salePrice

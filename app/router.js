@@ -26,5 +26,6 @@ module.exports = app => {
   router.get('/admin/person/list', controller.person.list); // 查询人员列表
 
   router.post('/flights-info/one-day-price-change-among-time', controller.flightsInfo.oneDayPriceAmongTime); // 查询信息
+  router.post('/flights-info/test-find', controller.flightsInfo.findByQuery); // 查询信息
 };
 

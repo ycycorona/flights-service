@@ -47,7 +47,8 @@ class UserController extends Base {
   // 获取当前用户信息
   async getUserInfo() {
     const { ctx } = this;
-    ctx.body = ctx.user;
+    //ctx.body = ctx.user;
+    ctx.body = ctx.session
   }
 
   // 根据用户名获取用户信息

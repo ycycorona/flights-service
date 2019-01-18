@@ -22,10 +22,6 @@ module.exports = appInfo => {
     passwordField: 'token',
   };
 
-
-
-
-
   config.logger = {
     consoleLevel: 'DEBUG',
     dir: path.join(appInfo.root, 'logs'),
