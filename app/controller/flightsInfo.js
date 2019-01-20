@@ -1,5 +1,5 @@
 'use strict';
-const Base = require('../core/base_controller');
+const Base = require('./base_controller');
 const dayjs = require('dayjs')
 class FlightsInfoController extends Base {
   // 查询同一天票价，随日期变化的趋势

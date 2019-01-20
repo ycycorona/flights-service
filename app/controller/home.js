@@ -1,5 +1,5 @@
 'use strict';
-const Base = require('../core/base_controller');
+const Base = require('./base_controller');
 class HomeController extends Base {
   async index() {
     const { ctx } = this;

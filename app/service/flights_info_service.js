@@ -9,7 +9,7 @@ class flightsInfoService extends Service {
   async getOneDayPriceAmongTime(findParams) {
     const selectListServiceRes = {
       flag: false,
-      error: '',
+      errNo: '',
       errorMsg: '',
       data: {},
     }

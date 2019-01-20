@@ -1,5 +1,5 @@
 'use strict';
-const Base = require('../core/base_controller');
+const Base = require('./base_controller');
 const userCreateRule = {
   name: { type: 'string',  },
   gender: { type: 'int', required:false, convertType: 'int'},
@@ -36,7 +36,7 @@ class PersonController extends Base {
     if (personFindServiceRes.flag) {
       ctx.body = ctx.successRes(personFindServiceRes.data)
     } else {
-      ctx.body = ctx.failRes({msg: personFindServiceRes.errorMsg, error: personFindServiceRes.error})
+      ctx.body = ctx.failRes({msg: personFindServiceRes.errorMsg, errNo: personFindServiceRes.error})
     }
   }
 
@@ -47,7 +47,7 @@ class PersonController extends Base {
     if (personListServiceRes.flag) {
       ctx.body = ctx.successRes(personListServiceRes.data)
     } else {
-      ctx.body = ctx.failRes({msg: personListServiceRes.errorMsg, error: personListServiceRes.error})
+      ctx.body = ctx.failRes({msg: personListServiceRes.errorMsg, errNo: personListServiceRes.error})
     }
   }
 
@@ -58,7 +58,7 @@ class PersonController extends Base {
     if (personCreateServiceRes.flag) {
       ctx.body = ctx.successRes(personCreateServiceRes.data)
     } else {
-      ctx.body = ctx.failRes({msg: personCreateServiceRes.errorMsg, error: personCreateServiceRes.error})
+      ctx.body = ctx.failRes({msg: personCreateServiceRes.errorMsg, errNo: personCreateServiceRes.error})
     }
 
   }
@@ -69,7 +69,7 @@ class PersonController extends Base {
     if (personUpdateServiceRes.flag) {
       ctx.body = ctx.successRes(personUpdateServiceRes.data)
     } else {
-      ctx.body = ctx.failRes({msg: personUpdateServiceRes.errorMsg, error: personUpdateServiceRes.error})
+      ctx.body = ctx.failRes({msg: personUpdateServiceRes.errorMsg, errNo: personUpdateServiceRes.error})
     }
   }
 
@@ -80,7 +80,7 @@ class PersonController extends Base {
     if (personDestroyServiceRes.flag) {
       ctx.body = ctx.successRes(personDestroyServiceRes.data)
     } else {
-      ctx.body = ctx.failRes({msg: personDestroyServiceRes.errorMsg, error: personDestroyServiceRes.error})
+      ctx.body = ctx.failRes({msg: personDestroyServiceRes.errorMsg, errNo: personDestroyServiceRes.error})
     }
   }
 }

@@ -11,16 +11,10 @@ module.exports = appInfo => {
 
 
   // use for cookie sign key, should change to your own and keep security
-  config.keys = appInfo.name + '_1544496710762_6467';
+  config.keys = appInfo.name + '_15444963770611199204210314_0923';
 
   // add your config here
   config.middleware = [ 'errorHandler', 'loginInterceptor', 'adminInterceptor' ];
-
-  //
-  config.passportLocal = {
-    usernameField: 'identifier',
-    passwordField: 'token',
-  };
 
   config.logger = {
     consoleLevel: 'DEBUG',
@@ -41,6 +35,7 @@ module.exports = appInfo => {
   config.multipart = {
     mode: 'file',
   };
+  // 在自己定义的中间件中处理全局异常，更加灵活
   // 全局异常处理 其中404要单独处理
   config.onerror = {
     /* all(err, ctx) {
@@ -54,8 +49,8 @@ module.exports = appInfo => {
       ctx.body = '<h3>error</h3>';
       ctx.status = 500;
     },*/
-    html(err, ctx) {
-      console.log(err)
+/*    html(err, ctx) {
+      console.log(abc)
     },
     json(err, ctx) {
       // console.log(err)
@@ -69,9 +64,8 @@ module.exports = appInfo => {
         default:
           break;
       }
-      // console.log(err)
       ctx.status = 500;
-    },
+    },*/
     /*    jsonp(err, ctx) {
       // 一般来说，不需要特殊针对 jsonp 进行错误定义，jsonp 的错误处理会自动调用 json 错误处理，并包装成 jsonp 的响应格式
     },*/
@@ -101,9 +95,8 @@ module.exports = appInfo => {
   };
 
   config.noLoginPath = [
-    '^/user/passport/local',
-    '^/user/passport/logout$',
-    '^/user/register',
+    '^/user/login$',
+    '^/user/register$',
   ];
 
   config.adminPath = [

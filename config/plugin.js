@@ -2,10 +2,6 @@
 
 // had enabled by egg
 // exports.static = true;
-exports.passportLocal = {
-  enable: true,
-  package: 'egg-passport-local',
-};
 
 exports.mysql = {
   enable: true,
@@ -20,11 +16,6 @@ exports.validate = {
 exports.logview = {
   package: 'egg-logview',
   env: [ 'local' ],
-};
-
-exports.passport = {
-  enable: true,
-  package: 'egg-passport',
 };
 
 exports.mongoose = {

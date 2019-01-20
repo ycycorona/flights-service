@@ -1,5 +1,5 @@
 'use strict';
-const Base = require('../core/base_controller');
+const Base = require('./base_controller');
 
 class UserController extends Base {
   // 注册
@@ -17,7 +17,7 @@ class UserController extends Base {
     if (registerRes.flag) {
       ctx.body = ctx.successRes(registerRes.data.userInfo);
     } else {
-      ctx.body = ctx.failRes({ status: '0', error: '1004', msg: registerRes.errorMsg });
+      ctx.body = ctx.failRes({ status: '0', errNo: '1004', msg: registerRes.errorMsg });
     }
   }
   // 登录成功
@@ -27,28 +27,54 @@ class UserController extends Base {
     if (flag) {
       ctx.body = ctx.successRes(flag);
     } else {
-      ctx.body = ctx.failRes({ status: '0', error: '1002', msg: 'no login info' });
+      ctx.body = ctx.failRes({ status: '0', errNo: '1002', msg: 'no login info' });
     }
   }
 
   // 登录失败
   async loginFail() {
     const { ctx } = this;
-    ctx.body = ctx.failRes({ status: '0', error: '1001', msg: 'login fail' + `:${ctx.session.passportFailMsg}||'登录字段不全'` });
+    ctx.body = ctx.failRes({ status: '0', errNo: '1001', msg: 'login fail' + `:${ctx.session.passportFailMsg}||'登录字段不全'` });
+  }
+
+  //登陆
+  async login() {
+    const { ctx } = this
+    const loginRule = {
+      identifier: { type: 'string' }, // 标识符
+      token: { type: 'string' }, // 密码
+    }
+    ctx.validate(loginRule)
+    const loginRes = await ctx.service.userService.login(ctx.request.body);
+
+    if (loginRes.flag) {
+      ctx.session.user = loginRes.filteredUserInfo
+      ctx.body =ctx.successRes(loginRes.msg)
+    } else {
+      ctx.body =ctx.failRes(loginRes.msg)
+    }
   }
 
   // 登出
   async logout() {
-    const { ctx } = this;
-    ctx.logout();
-    ctx.body = ctx.successRes('logout');
+    const { ctx } = this
+    if (!ctx.session.user) {
+      ctx.body = ctx.failRes({msg: '登出失败：用户尚未登陆！'})
+      return
+    }
+    ctx.session = null // 清除用户session信息
+    ctx.body = ctx.successRes('用户登出')
   }
 
   // 获取当前用户信息
   async getUserInfo() {
-    const { ctx } = this;
-    //ctx.body = ctx.user;
-    ctx.body = ctx.session
+    const { ctx } = this
+    const userInfo = ctx.session.user
+    if (userInfo) {
+      ctx.body = ctx.successRes(userInfo)
+    } else {
+      ctx.body = ctx.failRes({msg: '用户未登录'})
+    }
   }
 
   // 根据用户名获取用户信息

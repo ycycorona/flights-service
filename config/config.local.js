@@ -47,7 +47,7 @@ module.exports = appInfo => {
     agent: false,
   };
 
-/*  exports.mongoose = {
+  exports.mongoose = {
     client: {
       url: 'mongodb://127.0.0.1:27017/flights-crawler',
       options: {
@@ -56,9 +56,9 @@ module.exports = appInfo => {
         // pass: 'ycy6323892',
       },
     },
-  };*/
+  };
 
-  exports.mongoose = {
+/*  exports.mongoose = {
     client: {
       url: 'mongodb://47.105.46.120:27017/flights-crawler',
       options: {
@@ -67,7 +67,7 @@ module.exports = appInfo => {
         pass: 'ycy6323892',
       },
     },
-  };
+  };*/
 
 
   return config;

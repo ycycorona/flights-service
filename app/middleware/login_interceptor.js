@@ -4,15 +4,15 @@ module.exports = () => {
     const isMatchNologinList = ctx.app.config.noLoginPath.findIndex(path => {
       return !!ctx.originalUrl.match(new RegExp(path));
     }) >= 0;
-    let login;
+    let isLogin;
     if (!isMatchNologinList) {
       // 需要登录
-      login = ctx.isAuthenticated();
+      isLogin = !!ctx.session.user
     }
-    if (isMatchNologinList || login) {
+    if (isMatchNologinList || isLogin) {
       await next();
     } else {
-      ctx.body = ctx.failRes({ status: '0', error: '1002', msg: 'no login info' });
+      ctx.body = ctx.failRes({ status: '0', errNo: '1002', msg: '用户未登录' });
     }
 
   };
