@@ -20,22 +20,6 @@ class UserController extends Base {
       ctx.body = ctx.failRes({ status: '0', errNo: '1004', msg: registerRes.errorMsg });
     }
   }
-  // 登录成功
-  async loginSuccess() {
-    const { ctx, service } = this;
-    const flag = ctx.isAuthenticated(); // 再次确认一下授权信息
-    if (flag) {
-      ctx.body = ctx.successRes(flag);
-    } else {
-      ctx.body = ctx.failRes({ status: '0', errNo: '1002', msg: 'no login info' });
-    }
-  }
-
-  // 登录失败
-  async loginFail() {
-    const { ctx } = this;
-    ctx.body = ctx.failRes({ status: '0', errNo: '1001', msg: 'login fail' + `:${ctx.session.passportFailMsg}||'登录字段不全'` });
-  }
 
   //登陆
   async login() {
@@ -51,7 +35,7 @@ class UserController extends Base {
       ctx.session.user = loginRes.filteredUserInfo
       ctx.body =ctx.successRes(loginRes.msg)
     } else {
-      ctx.body =ctx.failRes(loginRes.msg)
+      ctx.body =ctx.failRes(ctx.errorCode('LOGIN_ERROR'))
     }
   }
 
@@ -73,7 +57,7 @@ class UserController extends Base {
     if (userInfo) {
       ctx.body = ctx.successRes(userInfo)
     } else {
-      ctx.body = ctx.failRes({msg: '用户未登录'})
+      ctx.body = ctx.failRes(ctx.errorCode('NO_USER_INFO'))
     }
   }
 

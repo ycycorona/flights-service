@@ -1,3 +1,4 @@
+const errorCode = require('../lib/error-code')
 module.exports = {
   successRes(data) {
     return {
@@ -7,12 +8,14 @@ module.exports = {
       error: '',
     };
   },
-  failRes({ status = '0', error = '1000', msg = 'fail' }) {
+  failRes({ status = '0', errNo = '1000', msg = 'fail' }) {
+    errNo = String(errNo)
     return {
       status,
       data: '',
       msg,
-      error,
+      errNo,
     };
   },
-};
+  errorCode
+}

@@ -62,9 +62,9 @@ class UserService extends Service {
       // 登陆成功后，获取详细用户信息
       userInfo = await userModel.getUserInfoByUserName(userAuthInfo.user_name);
       userRoles = await userModel.getUserRolesByUserName(userAuthInfo.user_name);
-    }
-    if (userRoles.findIndex(role => { return role.user_role === 0; }) >= 0) {
-      isAdmin = true;
+      if (userRoles.findIndex(role => { return role.user_role === 0; }) >= 0) {
+        isAdmin = true;
+      }
     }
 
     if (loginRes.flag) {

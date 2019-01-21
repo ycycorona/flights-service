@@ -10,8 +10,6 @@ module.exports = app => {
   router.post('/user/register', controller.user.register); // 注册
   router.post('/user/login', controller.user.login); // 登录
   router.get('/user/logout', controller.user.logout); // 登出
-  router.get('/user/passport/local/success', controller.user.loginSuccess); // 登陆成功跳转
-  router.get('/user/passport/local/fail', controller.user.loginFail); // 登录失败跳转
   router.get('/user/info', controller.user.getUserInfo); // 获取用户信息
   router.get('/admin/user/info/:userName', controller.user.getUserInfoByUserName); // 根据用户名获取用户信息
 

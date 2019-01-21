@@ -1,5 +1,5 @@
 module.exports = () => {
-  return async function notFoundHandler(ctx, next) {
+  return async function errorHandler(ctx, next) {
     try {
       await next();
       if (ctx.status === 404 && !ctx.body) {

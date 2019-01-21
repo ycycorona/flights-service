@@ -1,0 +1,6 @@
+p, r_root, /*, *
+p, r_admin, /admin/*, *
+
+g, u_root, r_root
+g, u_ycy421, r_admin
+

@@ -7,6 +7,7 @@
     "axios": "^0.18.0",
     "dayjs": "^1.7.8",
     "egg": "^2.2.1",
+    "egg-authz": "^1.0.2",
     "egg-logview": "^2.0.0",
     "egg-mongoose": "^3.1.1",
     "egg-mysql": "^3.0.0",
