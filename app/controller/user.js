@@ -51,7 +51,7 @@ class UserController extends Base {
       ctx.session.user = loginRes.filteredUserInfo
       ctx.body =ctx.successRes(loginRes.msg)
     } else {
-      ctx.body =ctx.failRes(loginRes.msg)
+      ctx.body =ctx.failRes({msg: loginRes.msg})
     }
   }
 
@@ -85,8 +85,15 @@ class UserController extends Base {
       userName: { type: 'string' },
     };
     ctx.validate(rule, ctx.params);
-    const userInfo = await ctx.service.userService.getUserInfoByUserName(userName);
+    const userInfo = await ctx.service.userService.getUserInfoByUserName(userName)
     ctx.body = userInfo;
+  }
+
+  //
+  async getUserList() {
+    const { ctx } = this
+    const userList = await ctx.service.userService.paginationList({queryUserName: 'root'})
+    ctx.body = userList
   }
 
 }

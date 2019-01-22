@@ -7,6 +7,20 @@ module.exports = class UserModel extends BaseModel {
     super(...args);
   }
 
+  async paginationList({offset=0, limit=10, queryUserName}) {
+    const querySql = this.squel.select()
+      .field('u.user_name')
+      .from('users', 'u')
+      .offset(offset)
+      .limit(limit)
+    if (queryUserName) {
+      querySql.where('u.user_name like ?', `%${queryUserName}%`)
+    }
+    querySql.toString()
+    const resList = await this.mysqlDb.query(querySql);
+    return resList || []
+  }
+
   async selectUserAuth(authType, identifier) {
     const querySql = this.squel.select()
       .field('u.user_name')
@@ -51,8 +65,8 @@ module.exports = class UserModel extends BaseModel {
           .where('user_name=?', userName)
       )
       .toString();
-    const resList = await this.mysqlDb.query(querySql);
-    return resList;
+    const resList = await this.mysqlDb.query(querySql)
+    return resList || []
   }
   // 注册
   async register(userObj) {

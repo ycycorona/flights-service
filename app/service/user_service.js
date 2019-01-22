@@ -1,11 +1,8 @@
 const Service = require('egg').Service;
+const RoleMap = require('../../meta/role_map')
 class UserService extends Service {
   get userModel() {
     return new (require('../model/user.js'))(this.ctx);
-  }
-  // 根据用户名获取用户信息
-  async getUserInfoByUserName(userName = '') {
-    return await this.userModel.getUserInfoByUserName(userName);
   }
   // 用户注册
   async register(userObj) {
@@ -61,22 +58,18 @@ class UserService extends Service {
       loginRes.flag = true;
       // 登陆成功后，获取详细用户信息
       userInfo = await userModel.getUserInfoByUserName(userAuthInfo.user_name);
-      userRoles = await userModel.getUserRolesByUserName(userAuthInfo.user_name);
     }
-    if (userRoles.findIndex(role => { return role.user_role === 0; }) >= 0) {
-      isAdmin = true;
-    }
-
     if (loginRes.flag) {
+      userRoles = await userModel.getUserRolesByUserName(userAuthInfo.user_name);
       // 登陆成功！
       // 取出需要存入session的用户信息
       loginRes.msg = '登陆成功'
       loginRes.filteredUserInfo = {
+        roles: userRoles.map(item => RoleMap[item.user_role].value),
         authType: userAuthInfo.authType,
-        isAdmin,
-        user_name: userAuthInfo.user_name,
-        id_user: userAuthInfo.id_user,
-        nick_name: userInfo.nick_name,
+        userName: userAuthInfo.user_name,
+        userId: userAuthInfo.id_user,
+        nickName: userInfo.nick_name,
         avatar: userInfo.avatar,
         status: userInfo.status,
 /*        id_user_create_by: userInfo.id_user_create_by,
@@ -88,6 +81,17 @@ class UserService extends Service {
 
     return loginRes
   }
+
+  // 根据用户名获取用户信息
+  async getUserInfoByUserName(userName = '') {
+    return await this.userModel.getUserInfoByUserName(userName);
+  }
+
+  //用户分页列表
+  async getUserList({queryUserName=''}) {
+    return await this.userModel.paginationList({queryUserName});
+  }
+
 }
 
 module.exports = UserService;

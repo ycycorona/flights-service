@@ -14,6 +14,7 @@ module.exports = app => {
   router.get('/user/passport/local/fail', controller.user.loginFail); // 登录失败跳转
   router.get('/user/info', controller.user.getUserInfo); // 获取用户信息
   router.get('/admin/user/info/:userName', controller.user.getUserInfoByUserName); // 根据用户名获取用户信息
+  router.get('/admin/user/list', controller.user.getUserList); //
 
   router.post('/admin/person/create', controller.person.create); // 创建人员
   router.post('/admin/person/update', controller.person.update); // 修改人员
