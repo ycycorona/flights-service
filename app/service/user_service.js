@@ -1,4 +1,3 @@
-
 const Service = require('egg').Service;
 const RoleMap = require('../../meta/role_map')
 class UserService extends Service {
@@ -84,7 +83,7 @@ class UserService extends Service {
         nick_name: userInfo.nick_name,
         avatar: userInfo.avatar,
         status: userInfo.status,
-        roles: userRoles.map(item => roleMap[item.user_role].value)
+        roles: userRoles.map(item => RoleMap[item.user_role].value)
 /*        id_user_create_by: userInfo.id_user_create_by,
         id_user_update_by: userInfo.id_user_update_by,
         create_time: userInfo.create_time,

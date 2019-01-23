@@ -35,7 +35,7 @@ class UserController extends Base {
       ctx.session.user = loginRes.filteredUserInfo
       ctx.body =ctx.successRes(loginRes.msg)
     } else {
-      ctx.body =ctx.failRes({msg: loginRes.msg})
+      ctx.body =ctx.failRes(ctx.errorCode('LOGIN_ERROR', loginRes.msg))
     }
   }
 
