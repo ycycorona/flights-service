@@ -95,7 +95,7 @@ class UserService extends Service {
   }
 
   //用户分页列表
-  async getUserList({queryUserName=''}) {
+  async getUserList({queryUserName=''}={}) {
     return await this.userModel.paginationList({queryUserName});
   }
 }

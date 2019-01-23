@@ -1,3 +1,4 @@
+'use strict'
 module.exports = (option) => {
   return async function permissionGuard(ctx, next) {
     if (ctx.status !== 403) {

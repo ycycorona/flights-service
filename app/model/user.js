@@ -6,18 +6,27 @@ module.exports = class UserModel extends BaseModel {
   constructor(...args) {
     super(...args);
   }
-
+  // 分页用户列表
   async paginationList({offset=0, limit=10, queryUserName}) {
-    const querySql = this.squel.select()
+    const uSql = this.squel.select()
       .field('u.user_name')
+      .field('u.id')
       .from('users', 'u')
       .offset(offset)
       .limit(limit)
     if (queryUserName) {
-      querySql.where('u.user_name like ?', `%${queryUserName}%`)
+      uSql.where('u.user_name like ?', `%${queryUserName}%`)
     }
-    querySql.toString()
-    const resList = await this.mysqlDb.query(querySql);
+
+    const querySql = this.squel.select()
+      .field('u.user_name', 'userName')
+      .field('u.id', 'userId')
+      .field('r.user_role', 'userRole')
+      .from(uSql, 'u')
+      .left_join('user_roles', 'r', 'u.id = r.id_user')
+    const querySqlStr = querySql.toString()
+    this.ctx.logger.info(querySqlStr)
+    const resList = await this.mysqlDb.query(querySqlStr);
     return resList || []
   }
 

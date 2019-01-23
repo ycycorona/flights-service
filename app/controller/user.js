@@ -1,5 +1,6 @@
 'use strict';
 const Base = require('./base_controller');
+const RoleMap = require('../../meta/role_map')
 
 class UserController extends Base {
   // 注册
@@ -78,11 +79,36 @@ class UserController extends Base {
     ctx.body = userInfo;
   }
 
-  //
+  // 获取用户列表
   async getUserList() {
     const { ctx } = this
-    const userList = await ctx.service.userService.paginationList({queryUserName: 'root'})
-    ctx.body = userList
+    const userQueryRule = {
+      userName: {type: 'string', required: false }
+    }
+    ctx.validate(userQueryRule, ctx.query)
+    const queryUserName = ctx.query.userName || ''
+    const roleList = await ctx.service.userService.getUserList({queryUserName})
+    const userMap = new Map()
+    const resList = []
+    roleList.forEach((user) => {
+      const roleName = user.userRole ? RoleMap[user.userRole].value : user.userRole
+      if (userMap.has(user.userName) && roleName) {
+        userMap.get(user.userName).userRoles.push(roleName)
+      } else {
+        userMap.set(user.userName, {
+          userName: user.userName,
+          userId: user.userId,
+          userRoles: []
+        })
+        if (roleName) {
+          userMap.get(user.userName).userRoles.push(roleName)
+        }
+      }
+    })
+    for(const [,user] of userMap) {
+      resList.push(user)
+    }
+    ctx.body = resList;
   }
 
 }

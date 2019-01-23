@@ -68,7 +68,22 @@ module.exports = appInfo => {
       },
     },
   };*/
-
+  /*  exports.sequelize = {
+      dialect: 'mysql', // support: mysql, mariadb, postgres, mssql
+      database: 'media_db',
+      host: '47.105.46.120',
+      port: 3306,
+      username: 'root',
+      password: 'ycy6323892',
+      delegate: 'sModel', // load all models to `app[delegate]` and `ctx[delegate]`, default to `model`
+      baseDir: 'model/s_model', // load all files in `app/${baseDir}` as models, default to `model`
+      // exclude: 'index.js', // ignore `app/${baseDir}/index.js` when load models, support glob and array
+      define: {
+        freezeTableName: true, // 不自动转换表明
+        underscored: true, // 字段自动转成下划线模式
+        timestamps: false,
+      },
+    }*/
 
   return config;
 };
