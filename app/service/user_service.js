@@ -1,5 +1,6 @@
-const roleMap = require('../../meta/role_map')
+
 const Service = require('egg').Service;
+const RoleMap = require('../../meta/role_map')
 class UserService extends Service {
   get userModel() {
     return new (require('../model/user.js'))(this.ctx);
@@ -92,6 +93,11 @@ class UserService extends Service {
     }
 
     return loginRes
+  }
+
+  //用户分页列表
+  async getUserList({queryUserName=''}) {
+    return await this.userModel.paginationList({queryUserName});
   }
 }
 
