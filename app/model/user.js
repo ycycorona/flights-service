@@ -11,7 +11,7 @@ module.exports = class UserModel extends BaseModel {
     const uSql = this.squel.select()
       .field('u.user_name')
       .field('u.id')
-      .field('count\(*\)', 'count')
+      .function('count(?)', '*')
       .from('users', 'u')
       .offset(offset)
       .limit(limit)
