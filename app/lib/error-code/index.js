@@ -20,12 +20,14 @@ class ErrCodeFactory{
   }
 }
 
-module.exports = function (errName) {
+module.exports = function (errName, extraMsg='') {
   if (!errName || errName instanceof String) {
     return new ErrCodeFactory({})
   }
   if (!errorCodeMap[errName]) {
     return new ErrCodeFactory({})
   }
-  return new ErrCodeFactory(errorCodeMap[errName])
+  const instance = new ErrCodeFactory(errorCodeMap[errName])
+  instance.msg += `:${extraMsg}`
+  return instance
 }

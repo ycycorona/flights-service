@@ -35,7 +35,7 @@ class UserController extends Base {
       ctx.session.user = loginRes.filteredUserInfo
       ctx.body =ctx.successRes(loginRes.msg)
     } else {
-      ctx.body =ctx.failRes(ctx.errorCode('LOGIN_ERROR'))
+      ctx.body =ctx.failRes(ctx.errorCode('LOGIN_ERROR', loginRes.msg))
     }
   }
 
@@ -55,7 +55,12 @@ class UserController extends Base {
     const { ctx } = this
     const userInfo = ctx.session.user
     if (userInfo) {
-      ctx.body = ctx.successRes(userInfo)
+      // ctx.body = ctx.successRes(userInfo)
+      ctx.body = ctx.successRes({
+        roles: userInfo.roles,
+        userName: userInfo.user_name,
+        avatar: userInfo.avatar
+      })
     } else {
       ctx.body = ctx.failRes(ctx.errorCode('NO_USER_INFO'))
     }

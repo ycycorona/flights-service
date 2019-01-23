@@ -1,3 +1,4 @@
+const roleMap = require('../../meta/role_map')
 const Service = require('egg').Service;
 class UserService extends Service {
   get userModel() {
@@ -5,7 +6,10 @@ class UserService extends Service {
   }
   // 根据用户名获取用户信息
   async getUserInfoByUserName(userName = '') {
-    return await this.userModel.getUserInfoByUserName(userName);
+    const roles = await this.userModel.getUserRolesByUserName(userName)
+    const userInfo = await this.userModel.getUserInfoByUserName(userName)
+    userInfo.roles = roles
+    return userInfo
   }
   // 用户注册
   async register(userObj) {
@@ -79,6 +83,7 @@ class UserService extends Service {
         nick_name: userInfo.nick_name,
         avatar: userInfo.avatar,
         status: userInfo.status,
+        roles: userRoles.map(item => roleMap[item.user_role].value)
 /*        id_user_create_by: userInfo.id_user_create_by,
         id_user_update_by: userInfo.id_user_update_by,
         create_time: userInfo.create_time,

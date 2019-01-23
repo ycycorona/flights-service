@@ -43,7 +43,7 @@ module.exports = appInfo => {
     },
     newEnforcer: async () => {
       // load the casbin model and policy from files, database is also supported.
-      return await casbin.newEnforcer('config/authz_model.conf', 'config/authz_policy.csv')
+      return await casbin.newEnforcer('meta/authz_model.conf', 'meta/authz_policy.csv')
     },
     authorizer: (ctx, enforcer) => {
       class Authorizer extends BasicAuthorizer{
