@@ -137,7 +137,7 @@ module.exports = appInfo => {
   }
 
   exports.validate = {
-    //convert: true,
+    convert: true,
     // validateRoot: false,
     widelyUndefined: true // convert empty string(''), NaN, Null to undefined
   }

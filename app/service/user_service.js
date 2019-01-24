@@ -2,7 +2,7 @@ const Service = require('egg').Service;
 const RoleMap = require('../../meta/role_map')
 class UserService extends Service {
   get userModel() {
-    return new (require('../model/user.js'))(this.ctx);
+    return new (require('../model/user.js'))(this.ctx, {tableName: 'users'});
   }
   // 根据用户名获取用户信息
   async getUserInfoByUserName(userName = '') {
@@ -94,9 +94,69 @@ class UserService extends Service {
     return loginRes
   }
 
-  //用户分页列表
-  async getUserList({queryUserName=''}={}) {
-    return await this.userModel.paginationList({queryUserName});
+  // 用户分页列表
+  async getUserList({offset, limit, userName: queryUserName}={}) {
+    const queryRes = await this.userModel.pagiUserList(offset, limit, queryUserName)
+    const roleList = queryRes.rows
+    const userMap = new Map()
+    const userList = []
+    roleList.forEach((user) => {
+      const roleName = user.userRole ? RoleMap[user.userRole].value : user.userRole
+      if (userMap.has(user.userName) && roleName) {
+        userMap.get(user.userName).userRoles.push(roleName)
+      } else {
+        userMap.set(user.userName, {
+          userName: user.userName,
+          userId: user.userId,
+          userRoles: []
+        })
+        if (roleName) {
+          userMap.get(user.userName).userRoles.push(roleName)
+        }
+      }
+    })
+    for(const [,user] of userMap) {
+      userList.push(user)
+    }
+    return {
+      rows: userList,
+      count: queryRes.count,
+      offset: queryRes.offset,
+      limit: queryRes.limit
+    }
+  }
+  // 添加用户角色
+  async addUserRole({userName, role}) {
+    const {ctx} = this
+    const serviceRes = ctx.handleRes()
+    if (! (userName && role)) {
+      return serviceRes
+    }
+    const modelRes = await this.userModel.addUserRole(userName, role)
+    if (modelRes.flag) {
+      serviceRes.flag = true
+      return serviceRes
+    } else {
+      serviceRes.msg = modelRes.msg
+      return serviceRes
+    }
+  }
+
+  // 删除用户角色
+  async removeUserRole({userName, role}) {
+    const {ctx} = this
+    const serviceRes = ctx.handleRes()
+    if (! (userName && role)) {
+      return serviceRes
+    }
+    const modelRes = await this.userModel.removeUserRole(userName, role)
+    if (modelRes.flag) {
+      serviceRes.flag = true
+      return serviceRes
+    } else {
+      serviceRes.msg = modelRes.msg
+      return serviceRes
+    }
   }
 }
 

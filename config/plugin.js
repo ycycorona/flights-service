@@ -11,7 +11,7 @@ exports.mysql = {
 exports.validate = {
   enable: true,
   package: 'egg-validate',
-};
+}
 
 exports.logview = {
   package: 'egg-logview',

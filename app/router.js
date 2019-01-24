@@ -12,7 +12,9 @@ module.exports = app => {
   router.get('/user/logout', controller.user.logout); // 登出
   router.get('/user/info', controller.user.getUserInfo); // 获取用户信息
   router.get('/admin/user/info/:userName', controller.user.getUserInfoByUserName); // 根据用户名获取用户信息
-  router.get('/admin/user/list', controller.user.getUserList); //
+  router.get('/admin/user/list', controller.user.getUserList); // 显示用户列表
+  router.post('/admin/user/role/add', controller.user.addUserRole); // 添加用户角色
+  router.post('/admin/user/role/remove', controller.user.removeUserRole); // 删除用户角色
 
   router.post('/admin/person/create', controller.person.create); // 创建人员
   router.post('/admin/person/update', controller.person.update); // 修改人员

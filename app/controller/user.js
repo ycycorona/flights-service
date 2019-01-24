@@ -83,34 +83,47 @@ class UserController extends Base {
   async getUserList() {
     const { ctx } = this
     const userQueryRule = {
-      userName: {type: 'string', required: false }
+      userName: {type: 'string', required: false },
+      offset: {type: 'int', required: false},
+      limit: {type: 'int', required: false}
     }
     ctx.validate(userQueryRule, ctx.query)
-    const queryUserName = ctx.query.userName || ''
-    const roleList = await ctx.service.userService.getUserList({queryUserName})
-    const userMap = new Map()
-    const resList = []
-    roleList.forEach((user) => {
-      const roleName = user.userRole ? RoleMap[user.userRole].value : user.userRole
-      if (userMap.has(user.userName) && roleName) {
-        userMap.get(user.userName).userRoles.push(roleName)
-      } else {
-        userMap.set(user.userName, {
-          userName: user.userName,
-          userId: user.userId,
-          userRoles: []
-        })
-        if (roleName) {
-          userMap.get(user.userName).userRoles.push(roleName)
-        }
-      }
-    })
-    for(const [,user] of userMap) {
-      resList.push(user)
-    }
-    ctx.body = resList;
+    const userList = await ctx.service.userService.getUserList(ctx.query)
+    ctx.body = ctx.successRes(userList)
   }
 
+  // 添加用户权限
+  async addUserRole() {
+    const { ctx } = this
+    const changeRoleRule = {
+      userName: {type: 'string', required: false},
+      role: {type: 'int', required: false}
+    }
+    ctx.validate(changeRoleRule, ctx.request.body)
+    const handleRes = await ctx.service.userService.addUserRole(ctx.request.body)
+    if (handleRes.flag) {
+      ctx.body = ctx.successRes()
+    } else {
+      ctx.body = ctx.failRes({msg: handleRes.msg})
+    }
+
+  }
+
+  // 删除用户权限
+  async removeUserRole() {
+    const { ctx } = this
+    const changeRoleRule = {
+      userName: {type: 'string', required: false},
+      role: {type: 'int', required: false}
+    }
+    ctx.validate(changeRoleRule, ctx.request.body)
+    const handleRes = await ctx.service.userService.removeUserRole(ctx.request.body)
+    if (handleRes.flag) {
+      ctx.body = ctx.successRes()
+    } else {
+      ctx.body = ctx.failRes({msg: handleRes.msg})
+    }
+  }
 }
 
 module.exports = UserController;

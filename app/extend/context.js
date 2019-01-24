@@ -1,6 +1,6 @@
 const errorCode = require('../lib/error-code')
 module.exports = {
-  successRes(data) {
+  successRes(data = '') {
     return {
       status: '1',
       data,
@@ -8,14 +8,23 @@ module.exports = {
       error: '',
     };
   },
-  failRes({ status = '0', errNo = '1000', msg = 'fail' }) {
+  failRes({status = '0', errNo = '1000', msg = 'fail', data = ''} = {}) {
     errNo = String(errNo)
     return {
       status,
-      data: '',
+      data,
       msg,
       errNo,
-    };
+    }
   },
-  errorCode
+  errorCode,
+  handleRes({flag = false, msg = '', data = '', error = null, errNo = ''}={}) {
+    return {
+      flag,
+      msg,
+      data,
+      error,
+      errNo
+    }
+  }
 }

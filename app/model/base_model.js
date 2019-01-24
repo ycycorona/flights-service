@@ -70,6 +70,27 @@ module.exports = class BaseModel {
   async delete(option) {
     return await this.mysqlDb.delete(this.tableName, new this.Entity(option));
   }
+
+  // 包装分页数据
+  getPaginationList(offset, limit, queryRes) {
+    if (queryRes) {
+      return {
+        rows: queryRes[0],
+        count: queryRes[1][0].count,
+        offset: offset,
+        limit: limit
+      }
+    } else {
+      return {
+        rows: [],
+        count: 0,
+        offset: offset,
+        limit: limit
+      }
+    }
+  }
+
+
   async checkExist(whereSql) {
     const sql = this.squel.select()
       .from(this.tableName, 't')

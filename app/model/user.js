@@ -4,14 +4,14 @@ const UserEntity = require('./entity/User.js');
 const AuthEntity = require('./entity/Auth.js');
 module.exports = class UserModel extends BaseModel {
   constructor(...args) {
-    super(...args);
+    super(...args)
   }
+
   // 分页用户列表
-  async paginationList({offset=0, limit=10, queryUserName}) {
+  async pagiUserList(offset=0, limit=10, queryUserName) {
     const uSql = this.squel.select()
       .field('u.user_name')
       .field('u.id')
-      .function('count(?)', '*')
       .from('users', 'u')
       .offset(offset)
       .limit(limit)
@@ -23,13 +23,19 @@ module.exports = class UserModel extends BaseModel {
       .field('u.user_name', 'userName')
       .field('u.id', 'userId')
       .field('r.user_role', 'userRole')
-      .field('u.count', 'count')
       .from(uSql, 'u')
       .left_join('user_roles', 'r', 'u.id = r.id_user')
     const querySqlStr = querySql.toString()
-    this.ctx.logger.info(querySqlStr)
-    const resList = await this.mysqlDb.query(querySqlStr);
-    return resList || []
+    const countSqlStr = this.squel.select()
+      .field('count(id)', 'count')
+      .from('users', 'u')
+      .toString()
+    this.ctx.logger.info(querySqlStr, countSqlStr)
+    const rowQuery = this.mysqlDb.query(querySqlStr)
+    const countQuery = this.mysqlDb.query(countSqlStr)
+
+    const queryRes = await Promise.all([rowQuery, countQuery]) || null
+    return this.getPaginationList(offset, limit, queryRes)
   }
 
   async selectUserAuth(authType, identifier) {
@@ -106,4 +112,63 @@ module.exports = class UserModel extends BaseModel {
 
     return insertUserRes;
   }
+
+  // 根据用户名添加用户角色
+  async addUserRole(userName, role) {
+    const modelRes = this.ctx.handleRes()
+    let insertRes
+    const transactionResult = await this.mysqlDb.beginTransactionScope(async conn => {
+      const user = await conn.get(this.tableName, {
+        user_name: userName
+      }, {columns: ['id']})
+      if (!user) {
+        modelRes.msg = '用户不存在'
+        throw '用户不存在'
+      }
+      const userId = user.id
+      const userRole = await conn.get('user_roles', {
+        id_user: userId,
+        user_role: role
+      })
+      if (userRole) {
+        modelRes.msg = '用户已存在该角色'
+        throw '用户已存在该角色'
+      }
+      insertRes = await conn.insert('user_roles', {user_role: role, id_user: userId})
+    }, this.ctx).catch(err => {
+      this.ctx.logger.error(err)
+    });
+
+    if (insertRes && insertRes.affectedRows === 1) {
+      modelRes.flag = true
+    }
+    return modelRes
+  }
+
+  // 根据用户名删除用户角色
+  async removeUserRole(userName, role) {
+    const modelRes = this.ctx.handleRes()
+    let removeRes
+    const transactionResult = await this.mysqlDb.beginTransactionScope(async conn => {
+      const user = await conn.get(this.tableName, {
+        user_name: userName
+      }, {columns: ['id']})
+      if (!user) {
+        modelRes.msg = '用户不存在'
+        throw '用户不存在'
+      }
+      const userId = user.id
+      removeRes = await conn.delete('user_roles', {user_role: role, id_user: userId})
+    }, this.ctx).catch(err => {
+      this.ctx.logger.error(err)
+    });
+
+    if (removeRes && removeRes.affectedRows===1) {
+      modelRes.flag = true
+    } else {
+      modelRes.msg = '用户无此角色'
+    }
+    return modelRes
+  }
+
 };
