@@ -101,22 +101,33 @@ module.exports = app => {
     getTime: Date
   })
 
-// flightInfoSchema.statics
+  // 查询所有收录的航司
+  flightInfoSchema.statics.getAllCompanies = async function() {
 
+    const airlineCodeList = await this.distinct('airlineCode')
 
-  flightInfoSchema.query.filter = function(str) {
-    let filter = 'date batchCode -_id'
-    if(str) {
-      filter = str
-    }
-    return this.select(filter)
+    const resPromise = airlineCodeList.map(async (element, index) => {
+      return await this.findOne({
+          'airlineCode':element
+        },
+        {
+          'airlineName': 1,
+          'airlineCode': 1,
+          '_id': 0
+        })
+
+    })
+
+    const res = await Promise.all(resPromise)
+
+    return res
   }
 
 // Defines a pre hook for the document.
   flightInfoSchema.pre('save', function(next) {
     next()
   })
-  
+
   return mongoose.model('flight_info', flightInfoSchema)
 }
 

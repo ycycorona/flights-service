@@ -6,6 +6,10 @@ class flightsInfoService extends Service {
     return this.ctx.model.Mongo.FlightInfo
   }
 
+  get flightsRouteModel() {
+    return this.ctx.model.Mongo.FlightRoute
+  }
+
   async getOneDayPriceAmongTime(findParams) {
     const selectListServiceRes = {
       flag: false,
@@ -97,6 +101,20 @@ class flightsInfoService extends Service {
 
   }
 
+  // 统计航线查询次数
+  async countRouterSearchTimes() {
+    return await this.flightsInfoModel.count()
+  }
+
+  // 获取已收录航司
+  async getAllCompanies() {
+    return await this.flightsInfoModel.getAllCompanies()
+  }
+
+  // 获取已收录航线
+  async getRoutes() {
+    return await this.flightsRouteModel.getRoutes()
+  }
 }
 
 module.exports = flightsInfoService;

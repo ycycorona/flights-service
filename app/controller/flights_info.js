@@ -82,18 +82,28 @@ class FlightsInfoController extends Base {
     ctx.body = res
   }
 
-  // 根据用户名获取用户信息
-  async getUserInfoByUserName() {
-/*    const { ctx } = this;
-    const userName = ctx.params.userName;
-    const rule = {
-      userName: { type: 'string' },
-    };
-    ctx.validate(rule, ctx.params);
-    const userInfo = await ctx.service.userService.getUserInfoByUserName(userName);
-    ctx.body = userInfo;*/
+  // 获取航班数据总条数
+  async countRouterSearchTimes() {
+    const { ctx } = this
+    const flightInfoService = ctx.service.flightsInfoService
+    ctx.body = ctx.successRes({count: await flightInfoService.countRouterSearchTimes()})
   }
 
+  // 获取可机场选项
+  async getAllCompanies() {
+    const { ctx } = this
+    const flightInfoService = ctx.service.flightsInfoService
+    const airportOpts = await flightInfoService.getAllCompanies()
+    ctx.body = ctx.successRes(airportOpts)
+  }
+
+  // 查询收录航线
+  async getRoutes() {
+    const { ctx } = this
+    const flightInfoService = ctx.service.flightsInfoService
+    const airportOpts = await flightInfoService.getRoutes()
+    ctx.body = ctx.successRes(airportOpts)
+  }
 }
 
 module.exports = FlightsInfoController;

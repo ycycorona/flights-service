@@ -24,5 +24,8 @@ module.exports = app => {
 
   router.post('/flights-info/one-day-price-change-among-time', controller.flightsInfo.oneDayPriceAmongTime); // 查询信息
   router.post('/flights-info/test-find', controller.flightsInfo.findByQuery); // 查询信息
+  router.get('/flights-info/route-count', controller.flightsInfo.countRouterSearchTimes); // 获取航班总条数
+  router.get('/flights-info/get-all-companies', controller.flightsInfo.getAllCompanies); // 查询机场选项
+  router.get('/flights-info/routes', controller.flightsInfo.getRoutes); // 查询收录航线
 };
 
